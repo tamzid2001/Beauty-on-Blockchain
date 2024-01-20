@@ -11,14 +11,34 @@ public class Block {
     private String manufacturingDetails;
     private long timeStamp;
     private int nonce;
+    private String validator;
+    private int stake;
+    private byte[] signature;
 
+        // Empty constructor
+        public Block() {
+            this.data = "";
+            this.productId = "";
+            this.manufacturingDetails = "";
+            this.previousHash = "";
+            this.timeStamp = System.currentTimeMillis();
+            this.validator = "";
+            this.stake = 0;
+            this.signature = new byte[0];
+            this.hash = calculateHash();
+        }
     // Block Constructor.
-    public Block(String data, String productId, String manufacturingDetails, String previousHash) {
+    public Block(byte[] signature, String validator, int stake, String data, String productId, String manufacturingDetails, String previousHash) {
         this.data = data;
         this.productId = productId;
         this.manufacturingDetails = manufacturingDetails;
         this.previousHash = previousHash;
         this.timeStamp = System.currentTimeMillis();
+        this.validator = validator;
+        this.stake = stake;
+        this.signature = signature;
+        // Other initializations and calculate the hash
+        this.hash = calculateHash();
         this.hash = calculateHash(); // Make sure this is done after setting the other values.
     }
 
@@ -82,6 +102,31 @@ public class Block {
         this.nonce = nonce;
     }
 
+        // Getters and setters
+        public byte[] getSignature() {
+            return signature;
+        }
+    
+        public void setSignature(byte[] signature) {
+            this.signature = signature;
+        }
+    
+        public String getValidator() {
+            return validator;
+        }
+    
+        public void setValidator(String validator) {
+            this.validator = validator;
+        }
+    
+        public int getStake() {
+            return stake;
+        }
+    
+        public void setStake(int stake) {
+            this.stake = stake;
+        }
+
     public String calculateHash() {
         String calculatedhash = applySha256( 
                 previousHash +
@@ -121,7 +166,7 @@ public class Block {
             System.out.println("Block Mined!!! : " + hash);
         }
 
-            private byte[] getBlockData() {
+    private byte[] getBlockData() {
         // Combine block data fields into a byte array
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
@@ -135,15 +180,6 @@ public class Block {
             // Handle exception
         }
         return outputStream.toByteArray();
-    }
-
-    // Getters and setters
-    public byte[] getSignature() {
-        return signature;
-    }
-
-    public void setSignature(byte[] signature) {
-        this.signature = signature;
     }
 
     // Add other getters and setters
